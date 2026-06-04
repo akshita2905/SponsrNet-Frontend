@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { Link } from "react-router-dom";
 
 function Opportunities() {
 
@@ -65,8 +66,23 @@ function Opportunities() {
                                 <strong>Status:</strong>{" "}
                                 {opportunity.status}
                             </p>
+                            <Link
+    to={`/opportunities/${opportunity.id}`}
+    className="
+    mt-5
+    inline-block
+    bg-blue-600
+    text-white
+    px-4
+    py-2
+    rounded-lg
+    "
+>
+    View Details
+</Link>
 
                         </div>
+                        
 
                     </div>
 

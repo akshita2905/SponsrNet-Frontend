@@ -1,14 +1,18 @@
-import { Link } from "react-router-dom";
-
-function Login() {
+function Register() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
 
-            <div className="bg-white p-10 rounded-xl shadow-lg w-96">
+            <div className="bg-white p-10 rounded-xl shadow-lg w-[450px]">
 
                 <h1 className="text-3xl font-bold text-center mb-8">
-                    Login
+                    Create Account
                 </h1>
+
+                <input
+                    type="text"
+                    placeholder="Full Name"
+                    className="w-full border p-3 rounded mb-4"
+                />
 
                 <input
                     type="email"
@@ -19,8 +23,15 @@ function Login() {
                 <input
                     type="password"
                     placeholder="Password"
-                    className="w-full border p-3 rounded mb-6"
+                    className="w-full border p-3 rounded mb-4"
                 />
+
+                <select
+                    className="w-full border p-3 rounded mb-6"
+                >
+                    <option>Sponsor</option>
+                    <option>Organizer</option>
+                </select>
 
                 <button
                     className="
@@ -32,18 +43,8 @@ function Login() {
                     hover:bg-blue-700
                     "
                 >
-                    Login
+                    Register
                 </button>
-
-                <p className="text-center mt-5">
-    Don't have an account?{" "}
-    <Link
-        to="/register"
-        className="text-blue-600 font-semibold"
-    >
-        Register
-    </Link>
-</p>
 
             </div>
 
@@ -51,4 +52,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default Register;
