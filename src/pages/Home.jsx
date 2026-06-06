@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Home() {
+
+  const { currentUser } = useAuth();
+
   return (
     <div>
 
@@ -23,23 +27,25 @@ function Home() {
               opportunities effortlessly.
             </p>
 
-            <div className="mt-8 flex gap-4">
+            {!currentUser && (
+              <div className="mt-8 flex gap-4">
 
-              <Link
-                to="/opportunities"
-                className="bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold"
-              >
-                Explore Opportunities
-              </Link>
+                <Link
+                  to="/opportunities"
+                  className="bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold"
+                >
+                  Explore Opportunities
+                </Link>
 
-              <Link
-                to="/login"
-                className="border border-white px-6 py-3 rounded-lg font-semibold"
-              >
-                Become a Sponsor
-              </Link>
+                <Link
+                  to="/login"
+                  className="border border-white px-6 py-3 rounded-lg font-semibold"
+                >
+                  Become a Sponsor
+                </Link>
 
-            </div>
+              </div>
+            )}
 
           </div>
 
@@ -48,7 +54,6 @@ function Home() {
       </section>
 
       {/* Features */}
-
       <section className="max-w-7xl mx-auto px-8 py-20">
 
         <h2 className="text-4xl font-bold text-center">

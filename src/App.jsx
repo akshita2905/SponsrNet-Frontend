@@ -2,10 +2,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 
+import OrganizerRoute from "./components/OrganizerRoute";
+import SponsorRoute from "./components/SponsorRoute";
+
 import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
 import Opportunities from "./pages/Opportunities";
-import Offers from "./pages/Offers";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import OrganizerDashboard from "./pages/OrganizerDashboard";
@@ -15,73 +16,129 @@ import MyOffers from "./pages/MyOffers";
 import MyOpportunities from "./pages/MyOpportunities";
 import CreateOpportunity from "./pages/CreateOpportunity";
 import Profile from "./pages/Profile";
+import OpportunityOffers from "./pages/OpportunityOffers";
+import EditOpportunity from "./pages/EditOpportunity";
+import NotFound from "./pages/NotFound";
 
 function App() {
-  return (
-    <BrowserRouter>
 
-      <Navbar />
+    return (
 
-      <Routes>
+        <BrowserRouter>
 
-        <Route
-          path="/"
-          element={<Home />}
-        />
+            <Navbar />
 
-        <Route
-          path="/dashboard"
-          element={<Dashboard />}
-        />
+            <Routes>
 
-        <Route
-          path="/opportunities"
-          element={<Opportunities />}
-        />
+                <Route
+                    path="/"
+                    element={<Home />}
+                />
 
-        <Route
-          path="/offers"
-          element={<Offers />}
-        />
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-<Route path="/register" element={<Register />} />
-<Route
-  path="/organizer-dashboard"
-  element={<OrganizerDashboard />}
+                <Route
+                    path="/opportunities"
+                    element={<Opportunities />}
+                />
+
+
+                <Route
+                    path="/login"
+                    element={<Login />}
+                />
+
+                <Route
+                    path="/register"
+                    element={<Register />}
+                />
+
+                <Route
+                    path="/profile"
+                    element={<Profile />}
+                />
+
+                <Route
+                    path="/opportunities/:id"
+                    element={<OpportunityDetails />}
+                />
+
+                {/* Sponsor Routes */}
+
+                <Route
+                    path="/my-offers"
+                    element={
+                        <SponsorRoute>
+                            <MyOffers />
+                        </SponsorRoute>
+                    }
+                />
+
+                <Route
+                    path="/sponsor-dashboard"
+                    element={
+                        <SponsorRoute>
+                            <SponsorDashboard />
+                        </SponsorRoute>
+                    }
+                />
+
+                {/* Organizer Routes */}
+
+                <Route
+                    path="/create-opportunity"
+                    element={
+                        <OrganizerRoute>
+                            <CreateOpportunity />
+                        </OrganizerRoute>
+                    }
+                />
+
+                <Route
+                    path="/my-opportunities"
+                    element={
+                        <OrganizerRoute>
+                            <MyOpportunities />
+                        </OrganizerRoute>
+                    }
+                />
+
+                <Route
+                    path="/organizer-dashboard"
+                    element={
+                        <OrganizerRoute>
+                            <OrganizerDashboard />
+                        </OrganizerRoute>
+                    }
+                />
+
+                <Route
+                    path="/opportunity-offers/:id"
+                    element={
+                        <OrganizerRoute>
+                            <OpportunityOffers />
+                        </OrganizerRoute>
+                    }
+                />
+
+                <Route
+                    path="/edit-opportunity/:id"
+                    element={
+                        <OrganizerRoute>
+                            <EditOpportunity />
+                        </OrganizerRoute>
+                    }
+                />
+
+                <Route
+    path="*"
+    element={<NotFound />}
 />
 
-<Route
-  path="/sponsor-dashboard"
-  element={<SponsorDashboard />}
-/>
-<Route
-    path="/opportunities/:id"
-    element={<OpportunityDetails />}
-/>
-<Route
-    path="/my-offers"
-    element={<MyOffers />}
-/>
-<Route
-    path="/my-opportunities"
-    element={<MyOpportunities />}
-/>
-<Route
-    path="/create-opportunity"
-    element={<CreateOpportunity />}
-/>
-<Route
-    path="/profile"
-    element={<Profile />}
-/>
-      </Routes>
-    
-    </BrowserRouter>
-  );
+            </Routes>
+
+        </BrowserRouter>
+
+    );
 }
 
 export default App;

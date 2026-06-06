@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
+
 
 function CreateOpportunity() {
 
     const navigate = useNavigate();
+    const { currentUser } = useAuth();
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -16,55 +19,80 @@ function CreateOpportunity() {
 
         e.preventDefault();
 
-        if (
-            !title ||
-            !description ||
-            !category ||
-            !targetAmount ||
-            !deadline
-        ) {
-            alert("Please fill all fields");
-            return;
-        }
-
         try {
 
-            const opportunityData = {
+            const opportunity = {
+
                 title,
                 description,
                 category,
-                targetAmount: Number(targetAmount),
+
+                targetAmount:
+                    Number(targetAmount),
+
                 currentAmount: 0,
+
                 deadline,
+
                 status: "OPEN",
+
                 organizer: {
-                    id: 1
-                }
+    id: currentUser.id
+}
             };
 
             await api.post(
                 "/opportunities",
-                opportunityData
+                opportunity
             );
 
-            alert("Opportunity created successfully!");
+            alert(
+                "Opportunity created successfully!"
+            );
 
-            navigate("/my-opportunities");
+            navigate(
+                "/my-opportunities"
+            );
 
         } catch (error) {
 
             console.log(error);
-            alert("Failed to create opportunity");
 
+            alert(
+                "Failed to create opportunity"
+            );
         }
     };
+    if (!currentUser) {
+    return (
+        <div className="p-10">
+            Please login first.
+        </div>
+    );
+}
 
     return (
+
         <div className="min-h-screen bg-gray-100 p-10">
 
-            <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+            <div
+                className="
+                max-w-3xl
+                mx-auto
+                bg-white
+                rounded-xl
+                shadow-lg
+                p-8
+                "
+            >
 
-                <h1 className="text-4xl font-bold mb-8">
+                <h1
+                    className="
+                    text-4xl
+                    font-bold
+                    mb-8
+                    "
+                >
                     Create Opportunity
                 </h1>
 
@@ -80,17 +108,31 @@ function CreateOpportunity() {
                         onChange={(e) =>
                             setTitle(e.target.value)
                         }
-                        className="w-full border p-3 rounded-lg"
+                        className="
+                        w-full
+                        border
+                        p-3
+                        rounded-lg
+                        "
+                        required
                     />
 
                     <textarea
                         placeholder="Description"
                         value={description}
                         onChange={(e) =>
-                            setDescription(e.target.value)
+                            setDescription(
+                                e.target.value
+                            )
                         }
-                        rows="4"
-                        className="w-full border p-3 rounded-lg"
+                        rows="5"
+                        className="
+                        w-full
+                        border
+                        p-3
+                        rounded-lg
+                        "
+                        required
                     />
 
                     <input
@@ -98,9 +140,17 @@ function CreateOpportunity() {
                         placeholder="Category"
                         value={category}
                         onChange={(e) =>
-                            setCategory(e.target.value)
+                            setCategory(
+                                e.target.value
+                            )
                         }
-                        className="w-full border p-3 rounded-lg"
+                        className="
+                        w-full
+                        border
+                        p-3
+                        rounded-lg
+                        "
+                        required
                     />
 
                     <input
@@ -108,29 +158,45 @@ function CreateOpportunity() {
                         placeholder="Target Amount"
                         value={targetAmount}
                         onChange={(e) =>
-                            setTargetAmount(e.target.value)
+                            setTargetAmount(
+                                e.target.value
+                            )
                         }
-                        className="w-full border p-3 rounded-lg"
+                        className="
+                        w-full
+                        border
+                        p-3
+                        rounded-lg
+                        "
+                        required
                     />
 
                     <input
                         type="date"
                         value={deadline}
                         onChange={(e) =>
-                            setDeadline(e.target.value)
+                            setDeadline(
+                                e.target.value
+                            )
                         }
-                        className="w-full border p-3 rounded-lg"
+                        className="
+                        w-full
+                        border
+                        p-3
+                        rounded-lg
+                        "
+                        required
                     />
 
                     <button
                         type="submit"
                         className="
-                        bg-blue-600
+                        bg-green-600
                         text-white
                         px-6
                         py-3
                         rounded-lg
-                        hover:bg-blue-700
+                        hover:bg-green-700
                         "
                     >
                         Create Opportunity

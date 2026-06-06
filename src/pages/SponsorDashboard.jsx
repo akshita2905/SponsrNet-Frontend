@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 function SponsorDashboard() {
 
     const [offers, setOffers] = useState([]);
+    const { currentUser } = useAuth();
 
     useEffect(() => {
 
-        api.get("/offers/sponsor/1")
+        if (!currentUser) return;
+
+api.get(
+    `/offers/sponsor/${currentUser.id}`
+)
             .then((response) => {
                 setOffers(response.data);
             })
@@ -15,8 +21,7 @@ function SponsorDashboard() {
                 console.log(error);
             });
 
-    }, []);
-
+}, [currentUser]);
     const accepted =
         offers.filter(
             offer => offer.status === "ACCEPTED"
@@ -32,6 +37,18 @@ function SponsorDashboard() {
             offer => offer.status === "REJECTED"
         ).length;
 
+        const totalSponsored =
+    offers
+        .filter(
+            offer =>
+                offer.status ===
+                "ACCEPTED"
+        )
+        .reduce(
+            (sum, offer) =>
+                sum + offer.amount,
+            0
+        );
     return (
         <div className="min-h-screen bg-gray-100 p-10">
 
@@ -39,7 +56,7 @@ function SponsorDashboard() {
                 Sponsor Dashboard
             </h1>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
 
                 <div className="bg-white p-6 rounded-xl shadow">
                     <h3 className="text-gray-500">
@@ -50,6 +67,15 @@ function SponsorDashboard() {
                         {offers.length}
                     </h1>
                 </div>
+                <div className="bg-white p-6 rounded-xl shadow">
+    <h3 className="text-gray-500">
+        Total Sponsored
+    </h3>
+
+    <h1 className="text-4xl font-bold text-blue-600 mt-2">
+        ₹{totalSponsored}
+    </h1>
+</div>
 
                 <div className="bg-white p-6 rounded-xl shadow">
                     <h3 className="text-gray-500">

@@ -1,29 +1,79 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 
 function Profile() {
 
-    const [user, setUser] = useState(null);
+    const { currentUser, setCurrentUser } =
+        useAuth();
 
-    useEffect(() => {
+    const [editMode, setEditMode] =
+        useState(false);
 
-        api.get("/users/1")
-            .then((response) => {
-                setUser(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    const [name, setName] =
+        useState("");
 
-    }, []);
+    const [photoUrl, setPhotoUrl] =
+        useState("");
 
-    if (!user) {
+    const [phoneNumber, setPhoneNumber] =
+        useState("");
+
+    if (!currentUser) {
         return (
             <div className="p-10">
-                Loading...
+                Please login first
             </div>
         );
     }
+
+    const saveProfile = async () => {
+
+        if (
+            phoneNumber &&
+            phoneNumber.length !== 10
+        ) {
+
+            alert(
+                "Phone number must contain exactly 10 digits"
+            );
+
+            return;
+        }
+
+        try {
+
+            const response =
+                await api.put(
+                    `/users/${currentUser.id}`,
+                    {
+                        ...currentUser,
+                        name,
+                        photoUrl,
+                        phoneNumber
+                    }
+                );
+
+            setCurrentUser(
+                response.data
+            );
+
+            setEditMode(false);
+
+            alert(
+                "Profile Updated Successfully"
+            );
+
+        } catch (error) {
+
+            console.log(error);
+
+            alert(
+                "Failed to update profile"
+            );
+
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-100 p-10">
@@ -34,8 +84,11 @@ function Profile() {
 
                     <img
                         src={
-                            user.photoUrl ||
-                            "https://via.placeholder.com/150"
+                            editMode
+                                ? photoUrl ||
+                                  "https://via.placeholder.com/150"
+                                : currentUser.photoUrl ||
+                                  "https://via.placeholder.com/150"
                         }
                         alt="Profile"
                         className="
@@ -47,12 +100,79 @@ function Profile() {
                         "
                     />
 
-                    <h1 className="text-4xl font-bold mb-2">
-                        {user.name}
-                    </h1>
+                    {editMode && (
+
+                        <>
+                            <input
+                                type="text"
+                                value={photoUrl}
+                                onChange={(e) =>
+                                    setPhotoUrl(
+                                        e.target.value
+                                    )
+                                }
+                                placeholder="Photo URL"
+                                className="
+                                border
+                                p-2
+                                rounded
+                                mb-4
+                                w-full
+                                "
+                            />
+
+                            <input
+                                type="text"
+                                value={phoneNumber}
+                                onChange={(e) =>
+                                    setPhoneNumber(
+                                        e.target.value
+                                            .replace(/\D/g, "")
+                                            .slice(0, 10)
+                                    )
+                                }
+                                placeholder="Phone Number"
+                                className="
+                                border
+                                p-2
+                                rounded
+                                mb-4
+                                w-full
+                                "
+                            />
+                        </>
+
+                    )}
+
+                    {editMode ? (
+
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) =>
+                                setName(
+                                    e.target.value
+                                )
+                            }
+                            className="
+                            border
+                            p-2
+                            rounded
+                            mb-2
+                            text-center
+                            "
+                        />
+
+                    ) : (
+
+                        <h1 className="text-4xl font-bold mb-2">
+                            {currentUser.name}
+                        </h1>
+
+                    )}
 
                     <p className="text-gray-500 mb-6">
-                        {user.role}
+                        {currentUser.role}
                     </p>
 
                 </div>
@@ -61,19 +181,81 @@ function Profile() {
 
                     <div>
                         <strong>Email:</strong>
-                        {" "} {user.email}
+                        {" "}
+                        {currentUser.email}
                     </div>
 
                     <div>
                         <strong>User ID:</strong>
-                        {" "} {user.id}
+                        {" "}
+                        {currentUser.id}
+                    </div>
+
+                    <div>
+                        <strong>Phone:</strong>
+                        {" "}
+                        {currentUser.phoneNumber ||
+                            "Not Added"}
                     </div>
 
                     <div>
                         <strong>Firebase UID:</strong>
                         {" "}
-                        {user.firebaseUid || "Not Linked"}
+                        {currentUser.firebaseUid}
                     </div>
+
+                </div>
+
+                <div className="mt-8">
+
+                    {!editMode ? (
+
+                        <button
+                            onClick={() => {
+
+                                setName(
+                                    currentUser.name || ""
+                                );
+
+                                setPhotoUrl(
+                                    currentUser.photoUrl || ""
+                                );
+
+                                setPhoneNumber(
+                                    currentUser.phoneNumber || ""
+                                );
+
+                                setEditMode(true);
+                            }}
+                            className="
+                            bg-blue-600
+                            text-white
+                            px-6
+                            py-3
+                            rounded-lg
+                            hover:bg-blue-700
+                            "
+                        >
+                            Edit Profile
+                        </button>
+
+                    ) : (
+
+                        <button
+                            onClick={saveProfile}
+                            className="
+                            bg-green-600
+                            text-white
+                            px-6
+                            py-3
+                            rounded-lg
+                            hover:bg-green-700
+                            "
+                        >
+                            Save Changes
+                        </button>
+
+                    )}
 
                 </div>
 

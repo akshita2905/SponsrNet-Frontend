@@ -1,71 +1,131 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
+
 function Navbar() {
-  const { currentUser } = useAuth();
-  return (
-    <nav className="bg-white shadow-md">
-      <div className="flex gap-8 items-center">
-        <h1 className="text-3xl font-bold text-blue-600">SponsrNet 🚀</h1>
-        <p className="text-sm text-gray-500">
-  {currentUser.role}
-</p>
 
-        <Link to="/">Home</Link>
+    const { currentUser } = useAuth();
 
-{currentUser.role === "SPONSOR" && (
-  <>
-    <Link to="/opportunities">
-      Opportunities
-    </Link>
+console.log("NAVBAR USER:", currentUser);
+    const navigate = useNavigate();
 
-    <Link to="/my-offers">
-      My Offers
-    </Link>
+    const logout = async () => {
 
-    <Link to="/sponsor-dashboard">
-      Dashboard
-    </Link>
-  </>
-)}
+        try {
 
-{currentUser.role === "ORGANIZER" && (
-  <>
-    <Link to="/create-opportunity">
-      Create Opportunity
-    </Link>
+            await signOut(auth);
 
-    <Link to="/my-opportunities">
-      My Opportunities
-    </Link>
+            navigate("/");
 
-    <Link to="/organizer-dashboard">
-      Dashboard
-    </Link>
-  </>
-)}
+        } catch (error) {
 
-<Link to="/profile">
-  Profile
-</Link>
+            console.log(error);
 
-<Link to="/login">
-  <button
-    className="
-    bg-blue-600
-    text-white
-    px-5
-    py-2
-    rounded-lg
-    hover:bg-blue-700
-    "
-  >
-    Login
-  </button>
-</Link>
-      </div>
-    </nav>
-  );
+        }
+    };
+
+    return (
+
+        <nav className="bg-white shadow-md p-4">
+
+            <div className="flex gap-8 items-center">
+
+                <h1 className="text-3xl font-bold text-blue-600">
+                    SponsrNet 
+                </h1>
+
+                {currentUser && (
+                    <p className="text-sm text-gray-500">
+                        {currentUser.role}
+                    </p>
+                )}
+
+                <Link to="/">
+                    Home
+                </Link>
+
+                {currentUser?.role === "SPONSOR" && (
+                    <>
+                        <Link to="/opportunities">
+                            Opportunities
+                        </Link>
+
+                        <Link to="/my-offers">
+                            My Offers
+                        </Link>
+
+                        <Link to="/sponsor-dashboard">
+                            Dashboard
+                        </Link>
+                    </>
+                )}
+
+                {currentUser?.role === "ORGANIZER" && (
+                    <>
+                        <Link to="/create-opportunity">
+                            Create Opportunity
+                        </Link>
+
+                        <Link to="/my-opportunities">
+                            My Opportunities
+                        </Link>
+
+                        <Link to="/organizer-dashboard">
+                            Dashboard
+                        </Link>
+                    </>
+                )}
+
+                {currentUser && (
+                    <Link to="/profile">
+                        Profile
+                    </Link>
+                )}
+
+                {!currentUser ? (
+
+                    <Link to="/login">
+
+                        <button
+                            className="
+                            bg-blue-600
+                            text-white
+                            px-5
+                            py-2
+                            rounded-lg
+                            hover:bg-blue-700
+                            "
+                        >
+                            Login
+                        </button>
+
+                    </Link>
+
+                ) : (
+
+                    <button
+                        onClick={logout}
+                        className="
+                        bg-red-500
+                        text-white
+                        px-5
+                        py-2
+                        rounded-lg
+                        hover:bg-red-600
+                        "
+                    >
+                        Logout
+                    </button>
+
+                )}
+
+            </div>
+
+        </nav>
+
+    );
 }
 
 export default Navbar;
