@@ -34,7 +34,7 @@ function Login() {
             response.data
         );
 
-        navigate("/profile");
+        window.location.href = "/profile";
     };
 
     const handleEmailLogin = async () => {
